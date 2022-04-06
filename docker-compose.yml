@@ -1,0 +1,221 @@
+version: '3'
+services:
+  nats:
+    image: nats
+    ports:
+      - '4222:4222'
+      - '6222:6222'
+      - '8222:8222'
+    command: ["-c", "nats-server.conf", "--user", "nats_client", "--pass", "HRhMHn7yAb"]
+  ms-auth:
+    build:
+      context: ./ms-auth
+      dockerfile: Dockerfile.dev
+    depends_on:
+      - nats
+    volumes:
+      - /app/node_modules
+      - ./ms-auth:/app
+    environment:
+      - NATS_HOST=nats
+      - NATS_PORT=4222
+      - NATS_PASS=HRhMHn7yAb
+      - NATS_USER=nats_client
+      - PG_DATABASE=postgres
+      - PG_HOST=167.71.145.172
+      - PG_PASSWORD=HyRe0xw3Qx
+      - PG_PORT=30432
+      - PG_USER=postgres
+      - REDIS_HOST=167.71.145.172
+      - REDIS_PORT=32408
+      - REDIS_PASS=w4yX4knJVE
+  websocket:
+    build:
+      context: ./websocket
+      dockerfile: Dockerfile.dev
+    ports:
+      - '4001:4001'
+    depends_on:
+      - nats
+    volumes:
+      - /app/node_modules
+      - ./websocket:/app
+    environment:
+      - NATS_HOST=nats
+      - NATS_PORT=4222
+      - NATS_PASS=HRhMHn7yAb
+      - NATS_USER=nats_client
+      - PG_DATABASE=postgres
+      - PG_HOST=167.71.145.172
+      - PG_PASSWORD=HyRe0xw3Qx
+      - PG_PORT=30432
+      - PG_USER=postgres
+      - REDIS_HOST=167.71.145.172
+      - REDIS_PORT=32408
+      - REDIS_PASS=w4yX4knJVE
+  ms-users:
+    build:
+      context: ./ms-users
+      dockerfile: Dockerfile.dev
+    depends_on:
+      - nats
+    volumes:
+      - /app/node_modules
+      - ./ms-users:/app
+    environment:
+      - NATS_HOST=nats
+      - NATS_PORT=4222
+      - NATS_PASS=HRhMHn7yAb
+      - NATS_USER=nats_client
+      - PG_DATABASE=postgres
+      - PG_HOST=167.71.145.172
+      - PG_PASSWORD=HyRe0xw3Qx
+      - PG_PORT=30432
+      - PG_USER=postgres
+      - REDIS_HOST=167.71.145.172
+      - REDIS_PORT=32408
+      - REDIS_PASS=w4yX4knJVE
+  ms-orders:
+    build:
+      context: ./ms-orders
+      dockerfile: Dockerfile.dev
+    depends_on:
+      - nats
+    volumes:
+      - /app/node_modules
+      - ./ms-orders:/app
+    environment:
+      - NATS_HOST=nats
+      - NATS_PORT=4222
+      - NATS_PASS=HRhMHn7yAb
+      - NATS_USER=nats_client
+      - PG_DATABASE=postgres
+      - PG_HOST=167.71.145.172
+      - PG_PASSWORD=HyRe0xw3Qx
+      - PG_PORT=30432
+      - PG_USER=postgres
+      - REDIS_HOST=167.71.145.172
+      - REDIS_PORT=32408
+      - REDIS_PASS=w4yX4knJVE
+  ms-bank:
+    build:
+      context: ./ms-bank
+      dockerfile: Dockerfile.dev
+    depends_on:
+      - nats
+    volumes:
+      - /app/node_modules
+      - ./ms-bank:/app
+    environment:
+      - NATS_HOST=nats
+      - NATS_PORT=4222
+      - NATS_PASS=HRhMHn7yAb
+      - NATS_USER=nats_client
+      - PG_DATABASE=postgres
+      - PG_HOST=167.71.145.172
+      - PG_PASSWORD=HyRe0xw3Qx
+      - PG_PORT=30432
+      - PG_USER=postgres
+      - REDIS_HOST=167.71.145.172
+      - REDIS_PORT=32408
+      - REDIS_PASS=w4yX4knJVE
+  ms-withdraw:
+    build:
+      context: ./ms-withdraw
+      dockerfile: Dockerfile.dev
+    depends_on:
+      - nats
+    volumes:
+      - /app/node_modules
+      - ./ms-withdraw:/app
+    environment:
+      - NATS_HOST=nats
+      - NATS_PORT=4222
+      - NATS_PASS=HRhMHn7yAb
+      - NATS_USER=nats_client
+      - PG_DATABASE=postgres
+      - PG_HOST=167.71.145.172
+      - PG_PASSWORD=HyRe0xw3Qx
+      - PG_PORT=30432
+      - PG_USER=postgres
+      - REDIS_HOST=167.71.145.172
+      - REDIS_PORT=32408
+      - REDIS_PASS=w4yX4knJVE
+  admin:
+    build:
+      context: ./admin-backend
+      dockerfile: Dockerfile.dev
+    depends_on:
+      - nats
+    ports:
+      - '4000:4000'
+    volumes:
+      - /app/node_modules
+      - ./admin-backend:/app
+    environment:
+      - NATS_HOST=nats
+      - NATS_PORT=4222
+      - NATS_PASS=HRhMHn7yAb
+      - NATS_USER=nats_client
+      - PG_DATABASE=postgres
+      - PG_HOST=167.71.145.172
+      - PG_PASSWORD=HyRe0xw3Qx
+      - PG_PORT=30432
+      - PG_USER=postgres
+      - REDIS_HOST=167.71.145.172
+      - REDIS_PORT=32408
+      - REDIS_PASS=w4yX4knJVE
+      - MONGO_PASS=Gg0lggekfc
+      - MONGO_USER=root
+      - MONGO_HOST=159.89.223.75
+      - MONGO_PORT=32217
+      - MONGO_DATABASE=btc-bolsa-admin
+      - MONGO_AUTH_DATABASE=admin
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev
+    depends_on:
+      - nats
+    ports:
+      - '3000:3000'
+    volumes:
+      - /app/node_modules
+      - ./api:/app
+    environment:
+      - NATS_HOST=nats
+      - NATS_PORT=4222
+      - NATS_PASS=HRhMHn7yAb
+      - NATS_USER=nats_client
+      - PG_DATABASE=postgres
+      - PG_HOST=167.71.145.172
+      - PG_PASSWORD=HyRe0xw3Qx
+      - PG_PORT=30432
+      - PG_USER=postgres
+      - REDIS_HOST=167.71.145.172
+      - REDIS_PORT=32408
+      - REDIS_PASS=w4yX4knJVE
+  api-public:
+    build:
+      context: ./api-public
+      dockerfile: Dockerfile.dev
+    depends_on:
+      - nats
+    ports:
+      - '5000:5000'
+    volumes:
+      - /app/node_modules
+      - ./api-public:/app
+    environment:
+      - NATS_HOST=nats
+      - NATS_PORT=4222
+      - NATS_PASS=HRhMHn7yAb
+      - NATS_USER=nats_client
+      - PG_DATABASE=postgres
+      - PG_HOST=167.71.145.172
+      - PG_PASSWORD=HyRe0xw3Qx
+      - PG_PORT=30432
+      - PG_USER=postgres
+      - REDIS_HOST=167.71.145.172
+      - REDIS_PORT=32408
+      - REDIS_PASS=w4yX4knJVE
